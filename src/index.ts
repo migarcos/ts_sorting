@@ -15,15 +15,33 @@ class BubbleSort {
     }
 }
 
+class QuickSort {
+    sort(data: number[]): number[] {
+        if (data.length <= 1) return data;
+        const pivot = data[data.length -1];
+        const left =  data.filter(x => x < pivot);     
+        const right =  data.filter(x => x > pivot);
+        const equal =  data.filter(x => x === pivot);
+        return [...this.sort(left), ...equal, ...this.sort(right)];
+    }
+}
+
 const dataset: number[] = [5, 3, 8, 1, 2, 9, 4, 7, 6, 0];
 
 function main() {
     try {
         const sorter = new BubbleSort();
+        const qsort = new QuickSort();
+
         console.log("Original dataset:", dataset);
 
         const sorted = sorter.sort(dataset);
         console.log("Sorted dataset: ", sorted);
+
+        const qsorted = qsort.sort(dataset);
+        console.log("With QSort", qsorted);
+
+
     } catch (err:any) {
         console.error("Error: ", err.message);
     }
