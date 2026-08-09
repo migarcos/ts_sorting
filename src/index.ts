@@ -26,23 +26,33 @@ class QuickSort {
     }
 }
 
-
+function timeMeasure(label: String, fn:() => void): number {
+    const start = Date.now();
+    fn();
+    const end = Date.now();
+    return end - start; 
+}
 
 function main() {
     try {
-        const dataset = Array.from( {length:100}, () => Math.floor(Math.random() * 100));
-        const sorter = new BubbleSort();
+        const dataset = Array.from( {length:10000}, () => Math.floor(Math.random() * 10000));
+        const bsort = new BubbleSort();
         const qsort = new QuickSort();
 
-        console.log("Original dataset:", dataset);
+        // console.log("Original dataset:", dataset);
 
-        const sorted = sorter.sort(dataset);
-        console.log("Sorted dataset: ", sorted);
+        const bubbleTime = timeMeasure("Bubblesort", () => bsort.sort(dataset));
+        // console.log("Sorted dataset: ", sorted);
+        const quickTime = timeMeasure("QuickSort", () => qsort.sort(dataset));
+        // const qsorted = qsort.sort(dataset);
+        // console.log("With QSort", qsorted);
 
-        const qsorted = qsort.sort(dataset);
-        console.log("With QSort", qsorted);
-
-
+        console.log("\n = = =   PERFORMANCE  = = = ");
+        console.log(`Dataset size: ${dataset.length}`);
+        console.table([
+            { Algorithm: "BubbleSort", "Time (ms)" : bubbleTime},
+            { Algorithm: "QuickSort", "Time (ms)" : quickTime},
+        ]);
     } catch (err:any) {
         console.error("Error: ", err.message);
     }
