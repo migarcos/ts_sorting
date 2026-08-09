@@ -28,6 +28,29 @@ class QuickSort {
     }
 }
 
+class MergeSort {
+    sort(data: number[]): number[] {
+        if (data.length <= 1) return data;
+        const mid = Math.floor(data.length /2);
+        const left = this.sort(data.slice(0, mid));
+        const right = this.sort(data.slice(mid));
+        return this.merge(left, right);
+    }
+
+    private merge(left: number[], right: number[]): number[] {
+        const result: number[] = [];
+        let i = 0, j = 0;
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                result.push(left[i++]);
+            } else {
+                result.push(right[j++]);
+            }
+        }
+        return [...result, ...left.slice(i), ...right.slice(j)];
+    }
+}
+
 function timeMeasure(label: String, fn:() => void): number {
     const start = Date.now();
     fn();
@@ -71,6 +94,7 @@ async function main() {
             const dataset = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
             const bsort = new BubbleSort();
             const qsort = new QuickSort();
+            const msort = new MergeSort();
 
             // console.log("Original dataset:", dataset);
 
@@ -79,12 +103,13 @@ async function main() {
             const quickTime = timeMeasure("QuickSort", () => qsort.sort(dataset));
             // const qsorted = qsort.sort(dataset);
             // console.log("With QSort", qsorted);
-
+            const mergeTime = timeMeasure("MergeSort", () => msort.sort(dataset));
             console.log("\n = = =   PERFORMANCE  = = = ");
             console.log(`Dataset size: ${dataset.length}`);
             console.table([
                 { Algorithm: "BubbleSort", "Time (ms)" : bubbleTime},
                 { Algorithm: "QuickSort", "Time (ms)" : quickTime},
+                { Algorithm: "MergeSort", "Time (ms)" : mergeTime},
             ]);
 
             // rl.close();
