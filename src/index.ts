@@ -26,10 +26,11 @@ class QuickSort {
     }
 }
 
-const dataset: number[] = [5, 3, 8, 1, 2, 9, 4, 7, 6, 0];
+
 
 function main() {
     try {
+        const dataset = Array.from( {length:100}, () => Math.floor(Math.random() * 100));
         const sorter = new BubbleSort();
         const qsort = new QuickSort();
 
