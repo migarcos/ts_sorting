@@ -35,23 +35,39 @@ function timeMeasure(label: String, fn:() => void): number {
     return end - start; 
 }
 
-function main() {
-    // console entry setup
+function askSize(query: string): Promise<string> {
     const rl = readLine.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
-    rl.question("Write the dataset size: ", (answer) => {
-        const size = parseInt(answer);
-
-        if (isNaN(size) || size <= 0) {
-            console.error("A valid number is greatest than 0.")
+    return new Promise((resolve) => {
+        rl.question(query, (answer) => {
             rl.close();
-            return;
-        }
+            resolve(answer);
+        });
+    });
+}
+
+async function main() {
+    // console entry setup
+    // const rl = readLine.createInterface({
+    //     input: process.stdin,
+    //     output: process.stdout
+    // });
+
+    // rl.question("Write the dataset size: ", (answer) => {
+    //     const size = parseInt(answer);
+
+    //     if (isNaN(size) || size <= 0) {
+    //         console.error("A valid number is greatest than 0.")
+    //         rl.close();
+    //         return;
+    //     }
         
         try {
+            const usrEntry = await askSize("Write the dataset size: ");
+            const size = parseInt(usrEntry);
             const dataset = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
             const bsort = new BubbleSort();
             const qsort = new QuickSort();
@@ -71,13 +87,13 @@ function main() {
                 { Algorithm: "QuickSort", "Time (ms)" : quickTime},
             ]);
 
-            rl.close();
-            
+            // rl.close();
+
         } catch (err:any) {
             console.error("Error: ", err.message);
         }
 
-    });
+    // });
     
 }
 

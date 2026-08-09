@@ -5,11 +5,10 @@ JavaScript is the most popular scripting language for the web. But TypeScript is
 This project aims to use TEST to measure the performance of several sorting methods (BubbleSort, QuickSort, etc.). This process will also allow visualization of the handling of:
 - Terminal output → console.log in main().
 - Recursion → QuickSort.
-- Classes → Sorter, BubbleSort, QuickSort.
+- Classes → BubbleSort, QuickSort, ..
 - Lists → arrays of numbers.
 - Async functions → measurePerformance.
 - Exceptions → throw new Error(...) and catch.
-- TSLint/ESLint → linting config.
 
 [Software Demo Video](http://youtube.link.goes.here)
 
@@ -38,19 +37,27 @@ Generate a tsconfig.json file, which configures how the TypeScript compiler beha
 
         npx tsc --init
 
-To give yourself a solid, modern learning setup, open the newly created tsconfig.json file and ensure the following key options are enabled (you can find and uncomment them):
+A solid, modern learning setup, tsconfig.json file:
 
         {
                 "compilerOptions": {
-                "target": "ES2022",
-                "module": "NodeNext",
-                "moduleResolution": "NodeNext",
-                "strict": true,
-                "esModuleInterop": true,
-                "skipLibCheck": true,
-                "forceConsistentCasingInFileNames": true
+                        "target": "ESNext",
+                        "module": "ESNext",
+                        // "moduleResolution": "node",
+                        "outDir": "dist",
+                        "rootDir": "src",
+                        "strict": true,
+                        "esModuleInterop": true,
+                        "skipLibCheck": true,
+                        "types": ["node"]
                 }
         }
+
+## Build and Run
+
+        npm run build
+
+        npm start
 
 # Useful Websites
 
