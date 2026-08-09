@@ -1,3 +1,5 @@
+import * as readLine from 'readline';
+
 class BubbleSort {
     sort(data: number[]): number[] {
         if (data.length === 0) {
@@ -34,28 +36,49 @@ function timeMeasure(label: String, fn:() => void): number {
 }
 
 function main() {
-    try {
-        const dataset = Array.from( {length:10000}, () => Math.floor(Math.random() * 10000));
-        const bsort = new BubbleSort();
-        const qsort = new QuickSort();
+    // console entry setup
+    const rl = readLine.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
 
-        // console.log("Original dataset:", dataset);
+    rl.question("Write the dataset size: ", (answer) => {
+        const size = parseInt(answer);
 
-        const bubbleTime = timeMeasure("Bubblesort", () => bsort.sort(dataset));
-        // console.log("Sorted dataset: ", sorted);
-        const quickTime = timeMeasure("QuickSort", () => qsort.sort(dataset));
-        // const qsorted = qsort.sort(dataset);
-        // console.log("With QSort", qsorted);
+        if (isNaN(size) || size <= 0) {
+            console.error("A valid number is greatest than 0.")
+            rl.close();
+            return;
+        }
+        
+        try {
+            const dataset = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
+            const bsort = new BubbleSort();
+            const qsort = new QuickSort();
 
-        console.log("\n = = =   PERFORMANCE  = = = ");
-        console.log(`Dataset size: ${dataset.length}`);
-        console.table([
-            { Algorithm: "BubbleSort", "Time (ms)" : bubbleTime},
-            { Algorithm: "QuickSort", "Time (ms)" : quickTime},
-        ]);
-    } catch (err:any) {
-        console.error("Error: ", err.message);
-    }
+            // console.log("Original dataset:", dataset);
+
+            const bubbleTime = timeMeasure("Bubblesort", () => bsort.sort(dataset));
+            // console.log("Sorted dataset: ", sorted);
+            const quickTime = timeMeasure("QuickSort", () => qsort.sort(dataset));
+            // const qsorted = qsort.sort(dataset);
+            // console.log("With QSort", qsorted);
+
+            console.log("\n = = =   PERFORMANCE  = = = ");
+            console.log(`Dataset size: ${dataset.length}`);
+            console.table([
+                { Algorithm: "BubbleSort", "Time (ms)" : bubbleTime},
+                { Algorithm: "QuickSort", "Time (ms)" : quickTime},
+            ]);
+
+            rl.close();
+            
+        } catch (err:any) {
+            console.error("Error: ", err.message);
+        }
+
+    });
+    
 }
 
 main();
