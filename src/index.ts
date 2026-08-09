@@ -51,6 +51,38 @@ class MergeSort {
     }
 }
 
+class HeapSort {
+    sort(data: number[]): number[]  {
+        if (data.length === 0) throw new Error("Dataset cannot be emoty");
+        const arr = [...data];
+        const n = arr.length;
+
+        for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+            this.heapify(arr, n, i);
+        }
+
+        for (let i = n - 1; i >= 0; i--) {
+            [arr[0], arr[i]] = [ arr[i], arr[0] ];
+            this.heapify(arr, n, i);
+        }
+        return arr;
+    }
+
+    private heapify(arr: number[], n: number, i: number ) {
+        let largest =i;
+        const left = 2 + i + 1;
+        const right = 2 + i + 2;
+
+        if (left < n && arr[left] > arr[largest]) largest = left;
+        if (right < n && arr[right] > arr[largest]) largest = right;
+
+        if (largest != i) {
+            [arr[i], arr[largest]] = [ arr[largest], arr[i] ];
+            this.heapify(arr, n, largest);
+        }
+    }
+}
+
 function timeMeasure(label: String, fn:() => void): number {
     const start = Date.now();
     fn();
@@ -95,21 +127,25 @@ async function main() {
             const bsort = new BubbleSort();
             const qsort = new QuickSort();
             const msort = new MergeSort();
+            const hsort = new HeapSort();
 
             // console.log("Original dataset:", dataset);
 
-            const bubbleTime = timeMeasure("Bubblesort", () => bsort.sort(dataset));
+            const bubbleTime = timeMeasure("Bubble Sort", () => bsort.sort(dataset));
             // console.log("Sorted dataset: ", sorted);
-            const quickTime = timeMeasure("QuickSort", () => qsort.sort(dataset));
+            const quickTime = timeMeasure("Quick Sort", () => qsort.sort(dataset));
             // const qsorted = qsort.sort(dataset);
             // console.log("With QSort", qsorted);
-            const mergeTime = timeMeasure("MergeSort", () => msort.sort(dataset));
+            const mergeTime = timeMeasure("Merge Sort", () => msort.sort(dataset));
+            const heapTime = timeMeasure("Heap Sort", () => hsort.sort(dataset));
+
             console.log("\n = = =   PERFORMANCE  = = = ");
             console.log(`Dataset size: ${dataset.length}`);
             console.table([
-                { Algorithm: "BubbleSort", "Time (ms)" : bubbleTime},
+                { Algorithm: "Bubble Sort", "Time (ms)" : bubbleTime},
                 { Algorithm: "QuickSort", "Time (ms)" : quickTime},
-                { Algorithm: "MergeSort", "Time (ms)" : mergeTime},
+                { Algorithm: "Merge Sort", "Time (ms)" : mergeTime},
+                { Algorithm: "Heap Sort", "Time (ms)" : heapTime}
             ]);
 
             // rl.close();
