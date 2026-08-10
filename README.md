@@ -59,6 +59,8 @@ A solid, modern learning setup, tsconfig.json file:
 
         npm start
 
+        npm run lint
+
 # Useful Websites
 
 {Make a list of websites that you found helpful in this project}

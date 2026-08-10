@@ -1,3 +1,4 @@
+// import package readLine to read form keyboard
 import * as readLine from 'readline';
 
 class BubbleSort {
@@ -83,7 +84,7 @@ class HeapSort {
     }
 }
 
-function timeMeasure(label: String, fn:() => void): number {
+function timeMeasure(label: string, fn:() => void): number {
     const start = Date.now();
     fn();
     const end = Date.now();
@@ -123,6 +124,7 @@ async function main() {
         try {
             const usrEntry = await askSize("Write the dataset size: ");
             const size = parseInt(usrEntry);
+            // dataset create an array using 'size' to populate with random numbers from 1 to 10000
             const dataset = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
             const bsort = new BubbleSort();
             const qsort = new QuickSort();
@@ -130,7 +132,8 @@ async function main() {
             const hsort = new HeapSort();
 
             // console.log("Original dataset:", dataset);
-
+            
+            // every sort is called to mearure the perfomance
             const bubbleTime = timeMeasure("Bubble Sort", () => bsort.sort(dataset));
             // console.log("Sorted dataset: ", sorted);
             const quickTime = timeMeasure("Quick Sort", () => qsort.sort(dataset));
@@ -150,12 +153,20 @@ async function main() {
 
             // rl.close();
 
-        } catch (err:any) {
-            console.error("Error: ", err.message);
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                console.error("Error:", err.message);
+            } else {
+                console.error("Unknown error:", err);
+            }
         }
+        // 156:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+        //     catch (err:any) {
+        //     console.error("Error: ", err.message);
+        // }
 
     // });
     
 }
 
-main();
+main(); 
