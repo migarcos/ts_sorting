@@ -105,6 +105,31 @@ function askSize(query: string): Promise<string> {
     });
 }
 
+async function runBubble( dataset: number[]) {
+    const bsort = new BubbleSort();
+    const bubbleTime = timeMeasure("Bubble Sort", () => bsort.sort(dataset));
+    return { Algorithm: "Bubble Sort", "Time (ms)" : bubbleTime};
+}
+
+async function runQuick( dataset: number[]) {
+    const qsort = new QuickSort();
+    const quickTime = timeMeasure("Quick Sort", () => qsort.sort(dataset));
+    return { Algorithm: "QuickSort", "Time (ms)" : quickTime};
+}
+
+async function runHeap( dataset: number[]) {
+    const hsort = new HeapSort();
+     const heapTime = timeMeasure("Heap Sort", () => hsort.sort(dataset));
+    return { Algorithm: "Heap Sort", "Time (ms)" : heapTime};
+}
+
+async function runMerge( dataset: number[]) {
+    const msort = new MergeSort();
+    const mergeTime = timeMeasure("Merge Sort", () => msort.sort(dataset));
+    return { Algorithm: "Merge Sort", "Time (ms)" : mergeTime};
+}
+
+
 async function main() {
     // console entry setup
     // const rl = readLine.createInterface({
@@ -126,30 +151,31 @@ async function main() {
             const size = parseInt(usrEntry);
             // dataset create an array using 'size' to populate with random numbers from 1 to 10000
             const dataset = Array.from({ length: size }, () => Math.floor(Math.random() * 10000));
-            const bsort = new BubbleSort();
-            const qsort = new QuickSort();
-            const msort = new MergeSort();
-            const hsort = new HeapSort();
-
+            
+            
+            const results = await Promise.all([
+                runBubble(dataset),
+                runQuick(dataset),
+                runHeap(dataset),
+                runMerge(dataset)
+            ]);
+            
+            const sortedResults = results.sort((a, b) => a["Time (ms)"] - b["Time (ms)"]);
             // console.log("Original dataset:", dataset);
             
             // every sort is called to mearure the perfomance
-            const bubbleTime = timeMeasure("Bubble Sort", () => bsort.sort(dataset));
+            
             // console.log("Sorted dataset: ", sorted);
-            const quickTime = timeMeasure("Quick Sort", () => qsort.sort(dataset));
+            
             // const qsorted = qsort.sort(dataset);
             // console.log("With QSort", qsorted);
-            const mergeTime = timeMeasure("Merge Sort", () => msort.sort(dataset));
-            const heapTime = timeMeasure("Heap Sort", () => hsort.sort(dataset));
+            
+           
 
             console.log("\n = = =   PERFORMANCE  = = = ");
             console.log(`Dataset size: ${dataset.length}`);
-            console.table([
-                { Algorithm: "Bubble Sort", "Time (ms)" : bubbleTime},
-                { Algorithm: "QuickSort", "Time (ms)" : quickTime},
-                { Algorithm: "Merge Sort", "Time (ms)" : mergeTime},
-                { Algorithm: "Heap Sort", "Time (ms)" : heapTime}
-            ]);
+            console.table(results);
+
 
             // rl.close();
 
