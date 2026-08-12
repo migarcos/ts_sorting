@@ -6,8 +6,11 @@ class BubbleSort {
         if (data.length === 0) {
             throw new Error('dataset cannot be empty!');
         }
+        // a copy from the original to order
         const arr = [...data];
+        // every loop lopks for the nighest value
         for (let i = 0; i < arr.length; i++) {
+            // exchange the highest value with the lowest
             for (let j = 0; j < arr.length - i - 1; j++) {
                 if (arr[j] > arr[j + 1]) {
                     [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
@@ -17,16 +20,79 @@ class BubbleSort {
         return arr;
     }
 }
+// A new version of QuickSort to avoid stack fails 
+class QuickSortIterative {
+  sort(data: number[]): number[] {
+    const arr = [...data];
+    const stack: [number, number][] = [[0, arr.length - 1]];
 
+    while (stack.length) {
+      const [low, high] = stack.pop()!;
+      if (low < high) {
+        const p = this.partition(arr, low, high);
+        stack.push([low, p - 1]);
+        stack.push([p + 1, high]);
+      }
+    }
+    return arr;
+  }
+
+  private partition(arr: number[], low: number, high: number): number {
+    const pivot = arr[high];
+    let i = low;
+    for (let j = low; j < high; j++) {
+      if (arr[j] < pivot) {
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        i++;
+      }
+    }
+    [arr[i], arr[high]] = [arr[high], arr[i]];
+    return i;
+  }
+}
+// first version to Quicksort works weel with sizes lowesst tha 21000
 class QuickSort {
     sort(data: number[]): number[] {
+        // if the size array is 1 o less, data ordered
         if (data.length <= 1) return data;
+        // pivot help to dive the array in 2 
         const pivot = data[data.length -1];
-        const left =  data.filter(x => x < pivot);     
+        // elements lowest than pivot
+        const left =  data.filter(x => x < pivot);    
+        // elements highest than pivot 
         const right =  data.filter(x => x > pivot);
         const equal =  data.filter(x => x === pivot);
+        // recursion to order
         return [...this.sort(left), ...equal, ...this.sort(right)];
     }
+}
+
+class MergeSortIterative {
+  sort(data: number[]): number[] {
+    let arr = [...data];
+    for (let size = 1; size < arr.length; size *= 2) {
+      for (let left = 0; left < arr.length - size; left += 2 * size) {
+        const mid = left + size;
+        const right = Math.min(left + 2 * size, arr.length);
+        arr = [
+          ...arr.slice(0, left),
+          ...this.merge(arr.slice(left, mid), arr.slice(mid, right)),
+          ...arr.slice(right)
+        ];
+      }
+    }
+    return arr;
+  }
+
+  private merge(left: number[], right: number[]): number[] {
+    const result: number[] = [];
+    let i = 0, j = 0;
+    while (i < left.length && j < right.length) {
+      if (left[i] <= right[j]) result.push(left[i++]);
+      else result.push(right[j++]);
+    }
+    return [...result, ...left.slice(i), ...right.slice(j)];
+  }
 }
 
 class MergeSort {
@@ -90,7 +156,7 @@ function timeMeasure(label: string, fn:() => void): number {
     const end = Date.now();
     return end - start; 
 }
-
+// asking to user about the dataset size
 function askSize(query: string): Promise<string> {
     const rl = readLine.createInterface({
         input: process.stdin,
@@ -105,6 +171,7 @@ function askSize(query: string): Promise<string> {
     });
 }
 
+// * simultaneous callin is possible if every sort is called as async to send its answer *
 async function runBubble( dataset: number[]) {
     const bsort = new BubbleSort();
     const bubbleTime = timeMeasure("Bubble Sort", () => bsort.sort(dataset));
@@ -112,7 +179,7 @@ async function runBubble( dataset: number[]) {
 }
 
 async function runQuick( dataset: number[]) {
-    const qsort = new QuickSort();
+    const qsort = new QuickSortIterative();
     const quickTime = timeMeasure("Quick Sort", () => qsort.sort(dataset));
     return { Algorithm: "QuickSort", "Time (ms)" : quickTime};
 }
@@ -129,7 +196,7 @@ async function runMerge( dataset: number[]) {
     return { Algorithm: "Merge Sort", "Time (ms)" : mergeTime};
 }
 
-
+// main is async to wait the user Answer when call askSize funtion
 async function main() {
     // console entry setup
     // const rl = readLine.createInterface({
