@@ -151,9 +151,13 @@ class HeapSort {
 }
 
 function timeMeasure(label: string, fn:() => void): number {
+    // to track the start time
     const start = Date.now();
+    // executed the function passed in the argument
     fn();
+    // track the time after complete the function
     const end = Date.now();
+    // return the elapsed time to run the funtion passed
     return end - start; 
 }
 // asking to user about the dataset size
