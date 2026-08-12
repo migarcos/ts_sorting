@@ -98,15 +98,19 @@ class MergeSortIterative {
 class MergeSort {
     sort(data: number[]): number[] {
         if (data.length <= 1) return data;
+        // finds the middle index of the array and splits
         const mid = Math.floor(data.length /2);
+        // recursively to sort the left and the rigth
         const left = this.sort(data.slice(0, mid));
         const right = this.sort(data.slice(mid));
+        // combines left and rigth with merge method
         return this.merge(left, right);
     }
 
     private merge(left: number[], right: number[]): number[] {
         const result: number[] = [];
         let i = 0, j = 0;
+        // loop until one of the arrays is fully traversed
         while (i < left.length && j < right.length) {
             if (left[i] <= right[j]) {
                 result.push(left[i++]);
